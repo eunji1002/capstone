@@ -1,17 +1,22 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-
+import { signin } from './Signin';
 
 const LoginScreen = () => {
-    const navigation = useNavigation(); 
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const navigation = useNavigation();
 
             const goBack = () => {
             navigation.goBack();
             };
-            const goMains = () => {
-                navigation.navigate('Mains');
-            }
+
+            const handleLogin = async () => {
+              const success = await signin(email, password);
+              if (success) {
+                navigation.navigate("Mains")}
+              }
         
         return (
             <View style={styles.container}>
@@ -26,16 +31,19 @@ const LoginScreen = () => {
                 <View style={styles.formArea}>
                 <TextInput
                     style={styles.textForm}
-                    placeholder={'아이디(5자 이상, 영문, 숫자)'}
+                    placeholder={'이메일'}
+                    onChangeText={text => setEmail(text)}
+                    keyboardType="email-address"
                 />
                 <TextInput
                     style={styles.textForm}
                     secureTextEntry={true}
                     placeholder={'비밀번호(8자 이상)'}
+                    onChangeText={text => setPassword(text)}
                 />
                 </View>
                 <View style={styles.buttonArea}>
-                <TouchableOpacity style={styles.button}  onPress={goMains}>
+                <TouchableOpacity style={styles.button}  onPress={handleLogin}>
                 <Text style={styles.buttonText}>로그인</Text>
                 </TouchableOpacity>
             </View>

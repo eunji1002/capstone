@@ -1,13 +1,24 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { registration } from './Registration';
 
 const RegisterScreen = () => {
-  const navigation = useNavigation(); // navigation 객체 생성
+  const [nickName, setNickName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const navigation = useNavigation();
 
   const goBack = () => {
     navigation.goBack();
   };
+
+  const handleSignup = async () => {
+    const success = await registration(nickName ,email, password);
+    if (success) {
+      navigation.navigate("Initial")}
+  }
+
 
   return (
     <View style={styles.container}>
@@ -17,17 +28,20 @@ const RegisterScreen = () => {
         </TouchableOpacity>
       </View>
       <View style={styles.topLogo}>
-        <Text style={styles.logo}>Register</Text>
+        <Text style={styles.logo}>Singup</Text>
       </View>
       <View style={styles.formArea}>
         <TextInput
-          style={styles.textForm}
-          placeholder={'아이디(5자 이상, 영문, 숫자)'}
+            style={styles.textForm}
+            placeholder={'이메일'}
+            onChangeText={text => setEmail(text)}
+            keyboardType="email-address"
         />
         <TextInput
-          style={styles.textForm}
-          secureTextEntry={true}
-          placeholder={'비밀번호(8자 이상)'}
+            style={styles.textForm}
+            secureTextEntry={true}
+            placeholder={'비밀번호(8자 이상)'}
+            onChangeText={text => setPassword(text)}
         />
         <TextInput
           style={styles.textForm}
@@ -41,9 +55,10 @@ const RegisterScreen = () => {
         </Text>
       </View>
       <View style={styles.formArea}>
-        <TextInput
-          style={styles.textForm}
-          placeholder={'닉네임'}
+      <TextInput
+            style={styles.textForm}
+            placeholder={'닉네임'}
+            onChangeText={text => setNickName(text)}
         />
         <View style={styles.pickerSelect}>
           {/* RNPickerSelect 컴포넌트 스타일 */}
@@ -55,7 +70,7 @@ const RegisterScreen = () => {
         </Text>
       </View>
       <View style={styles.buttonArea}>
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity style={styles.button} onPress={handleSignup}>
           <Text style={styles.buttonText}>회원가입</Text>
         </TouchableOpacity>
       </View>
