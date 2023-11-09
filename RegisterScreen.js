@@ -7,6 +7,10 @@ const RegisterScreen = () => {
   const [nickName, setNickName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [passwordsMatch, setPasswordsMatch] = useState(true);
+
+
   const navigation = useNavigation();
 
   const goBack = () => {
@@ -20,6 +24,26 @@ const RegisterScreen = () => {
   }
 
 
+  const handlePasswordChange = text => {
+    setPassword(text);
+    // 비밀번호가 변경될 때마다 두 비밀번호를 비교
+    if (confirmPassword !== '' && text !== confirmPassword) {
+      setPasswordsMatch(false);
+    } else {
+      setPasswordsMatch(true);
+    }
+  };
+
+  const handleConfirmPasswordChange = text => {
+    setConfirmPassword(text);
+    // 비밀번호 확인이 변경될 때마다 두 비밀번호를 비교
+    if (password !== '' && text !== password) {
+      setPasswordsMatch(false);
+    } else {
+      setPasswordsMatch(true);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.goBackButtonContainer}>
@@ -28,7 +52,7 @@ const RegisterScreen = () => {
         </TouchableOpacity>
       </View>
       <View style={styles.topLogo}>
-        <Text style={styles.logo}>Singup</Text>
+        <Text style={styles.logo}>Registration</Text>
       </View>
       <View style={styles.formArea}>
         <TextInput
@@ -37,23 +61,28 @@ const RegisterScreen = () => {
             onChangeText={text => setEmail(text)}
             keyboardType="email-address"
         />
-        <TextInput
-            style={styles.textForm}
-            secureTextEntry={true}
-            placeholder={'비밀번호(8자 이상)'}
-            onChangeText={text => setPassword(text)}
-        />
-        <TextInput
-          style={styles.textForm}
-          secureTextEntry={true}
-          placeholder={'비밀번호 확인'}
-        />
+     <TextInput
+        style={styles.textForm}
+        secureTextEntry={true}
+        placeholder={'비밀번호(8자 이상)'}
+        onChangeText={handlePasswordChange}
+        value={password}
+      />
+      <TextInput
+        style={styles.textForm}
+        secureTextEntry={true}
+        placeholder={'비밀번호 확인'}
+        onChangeText={handleConfirmPasswordChange}
+        value={confirmPassword}
+      />
+      {!passwordsMatch && (
+        <View style={styles.validationMessage}>
+          <Text style={styles.TextValidation}>
+            비밀번호가 일치하지 않습니다.
+          </Text>
       </View>
-      <View style={styles.validationMessage}>
-        <Text style={styles.TextValidation}>
-          비밀번호가 일치하지 않습니다.
-        </Text>
-      </View>
+      )}
+    </View>
       <View style={styles.formArea}>
       <TextInput
             style={styles.textForm}
