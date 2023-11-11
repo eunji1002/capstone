@@ -7,13 +7,16 @@ import LoginScreen from './LoginScreen';
 import RegisterScreen from './RegisterScreen';
 import MainScreen from './MainScreen';
 import SearchScreen from './SearchScreen'
+import Notification from './Notification';
 import { navigationRef } from './NavigationManager'; 
 
 
 import firebase from 'firebase/app'; //없으면 안됌
 import 'firebase/auth';        //없으면 안됌
 import 'firebase/firestore';  //없으면 안됌
-import firebaseConfig from './FirebaseConfig'; //없으면 안됌
+import {firebaseConfig} from './FirebaseConfig'; //없으면 안됌
+
+
 
 const Stack = createStackNavigator();
 
@@ -28,6 +31,7 @@ export default function App() {
         <Stack.Screen name="Register" component={RegisterScreen} options={{headerShown: false}}/>
         <Stack.Screen name='Mains' component={MainScreen} options={{headerShown: false}}/>
         <Stack.Screen name='Search' component={SearchScreen} options={{headerShown: false}}/>
+        <Stack.Screen name='Notification' component={Notification} options={{headerShown: false}}/>
       </Stack.Navigator>
     </NavigationContainer>
   );

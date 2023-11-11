@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "barcoding",
-    "slug": "barcoding",
+    "slug": "capstone",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -20,7 +20,10 @@
           "name": "twayair",
           "asset": "./assets/font/tway_air.ttf"
         }
-      ]
+      ],
+      "eas": {
+        "projectId": "6afda1f7-5c0d-4e15-b294-efbca5a01c6c"
+      }
     },
     "ios": {
       "supportsTablet": true
@@ -33,6 +36,7 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "owner": "bellozzang"
   }
 }

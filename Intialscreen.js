@@ -20,6 +20,9 @@ const InitialScreen = () => {
         <TouchableOpacity style={[styles.buttonContainer, styles.registerButton]} onPress={() => navigate('Register')}>
           <Text style={[styles.buttonText, styles.register]}>회원가입</Text>
         </TouchableOpacity>
+        <TouchableOpacity style={[styles.buttonContainer, styles.registerButton]} onPress={() => navigate('Notification')}>
+          <Text style={[styles.buttonText, styles.register]}>푸시알림</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );

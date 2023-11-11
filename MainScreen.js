@@ -2,12 +2,17 @@ import React from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import RoundButton from './RoundButton';
+import { signout } from './Logout';
 
 const MainScreen = () => {
     const navigation = useNavigation();
     const Searchbt = () => {
       navigation.navigate('Search');
     };
+    const Logouthbt = () => {
+        signout(); // 로그아웃 함수 호출
+        navigation.navigate("Initial", { screen: "Initial" } );
+      };
     
     return (
         <View style={Styles.container}>
@@ -15,6 +20,12 @@ const MainScreen = () => {
                 <View style={Styles.logoContainer}>
                     <Text style={Styles.logo}>Categorie</Text>
                 </View>
+                <TouchableOpacity onPress={Logouthbt}>
+                    <Image 
+                      style={Styles.logout} 
+                      source={require('./assets/logout.png')} 
+                    />
+                </TouchableOpacity>
                 <TouchableOpacity onPress={Searchbt}>
                     <Image 
                       style={Styles.search} 
@@ -54,6 +65,11 @@ const Styles = StyleSheet.create({
     search: {
         width: 30, 
         height: 30, 
+    },
+    logout: {
+        width: 30, 
+        height: 30, 
+        marginRight: 20, 
     },
     HomeText: {
         marginTop: 20, 
