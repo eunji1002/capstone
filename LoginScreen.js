@@ -15,6 +15,7 @@ const LoginScreen = () => {
             const handleLogin = async () => {
               const success = await signin(email, password);
               if (success) {
+                console.log('user login');
                 navigation.navigate("Mains")}
               }
         

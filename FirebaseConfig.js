@@ -5,6 +5,9 @@ import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
+import { getFirestore } from "firebase/firestore";
+
+
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -20,12 +23,15 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
+const db = getFirestore(app);
+
 
 if (!firebase.apps.length) {
   console.log("Firebase Connect");
   firebase.initializeApp(firebaseConfig);
 }
 
+export { db }; 
 // Initialize Expo Notifications
 // Notifications.setNotificationHandler({
 //   handleNotification: async () => ({
