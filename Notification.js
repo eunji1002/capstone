@@ -2,7 +2,9 @@ import { useState, useEffect, useRef } from 'react';
 import { Text, View, Button, Platform } from 'react-native';
 import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
-
+import { db } from './FirebaseConfig'; 
+import { doc, onSnapshot, collection } from 'firebase/firestore';
+import dayjs from 'dayjs';
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -29,11 +31,84 @@ export default function Notification() {
       console.log(response);
     });
 
+    // Firestore의 실시간 업데이트를 감지하고 푸시 알림 예약
+    const unsubscribe = listenForUpdates();
+
     return () => {
       Notifications.removeNotificationSubscription(notificationListener.current);
       Notifications.removeNotificationSubscription(responseListener.current);
+      unsubscribe(); // 컴포넌트 언마운트 시 실시간 업데이트 리스너 해제
     };
   }, []);
+
+  const listenForUpdates = () => {
+    const userDocRef = collection(db, 'users', 'XCgbxTGZAqO3JkAqw8MoDgRCV8h1', 'food');
+    return onSnapshot( userDocRef, (snapshot) => {
+      snapshot.forEach((doc) => {
+        const userData = doc.data();
+        console.log('UserData:', userData);
+        
+        
+        const expirationDate = dayjs(userData.date, 'YYYYMMDD');
+        console.log(expirationDate);
+        const today = dayjs().format('YYYY-MM-DD');
+        console.log(today);
+        const daysUntilExpiration = expirationDate.diff(today, 'day');
+        console.log(daysUntilExpiration);
+        
+
+        // 여기서 daysUntilExpiration이 3이면 푸시 알림을 보내는 로직 추가
+        if (daysUntilExpiration != 0) {
+          schedulePushNotification(userData.productName, daysUntilExpiration); // 제품 이름을 전달
+        }
+      }) 
+    });
+  };
+
+  const schedulePushNotification = async (productName,  daysUntilExpiration) => {
+    await Notifications.scheduleNotificationAsync({
+      content: {
+        title: '바코딩의 푸시알림 📬',
+        body: `${productName}의 유통기한이 ${daysUntilExpiration}일 남았습니다!`, // 제품 이름을 출력
+        data: { data: 'goes here' },
+      },
+      trigger: { seconds: 2 },
+    });
+  };
+
+  async function registerForPushNotificationsAsync() {
+    let token;
+
+    if (Platform.OS === 'android') {
+      await Notifications.setNotificationChannelAsync('default', {
+        name: 'default',
+        importance: Notifications.AndroidImportance.MAX,
+        vibrationPattern: [0, 250, 250, 250],
+        lightColor: '#FF231F7C',
+      });
+    }
+
+    if (Device.isDevice) {
+      const { status: existingStatus } = await Notifications.getPermissionsAsync();
+      let finalStatus = existingStatus;
+      if (existingStatus !== 'granted') {
+        const { status } = await Notifications.requestPermissionsAsync();
+        finalStatus = status;
+      }
+      if (finalStatus !== 'granted') {
+        alert('Failed to get push token for push notification!');
+        return;
+      }
+      // Learn more about projectId:
+      // https://docs.expo.dev/push-notifications/push-notifications-setup/#configure-projectid
+      token = (await Notifications.getExpoPushTokenAsync({ projectId: '6afda1f7-5c0d-4e15-b294-efbca5a01c6c' })).data;
+      console.log(token);
+    } else {
+      alert('Must use physical device for Push Notifications');
+    }
+
+    return token;
+  }
 
   return (
     <View
@@ -48,57 +123,7 @@ export default function Notification() {
         <Text>Body: {notification && notification.request.content.body}</Text>
         <Text>Data: {notification && JSON.stringify(notification.request.content.data)}</Text>
       </View>
-      <Button
-        title="푸시알림 버튼"
-        onPress={async () => {
-          await schedulePushNotification();
-        }}
-      />
+      {/* 버튼 삭제 */}
     </View>
   );
-}
-
-async function schedulePushNotification() {
-  await Notifications.scheduleNotificationAsync({
-    content: {
-      title: "바코딩의 푸시알림  📬",
-      body: '푸시알림 성공!!',
-      data: { data: 'goes here' },
-    },
-    trigger: { seconds: 2 },
-  });
-}
-
-async function registerForPushNotificationsAsync() {
-  let token;
-
-  if (Platform.OS === 'android') {
-    await Notifications.setNotificationChannelAsync('default', {
-      name: 'default',
-      importance: Notifications.AndroidImportance.MAX,
-      vibrationPattern: [0, 250, 250, 250],
-      lightColor: '#FF231F7C',
-    });
-  }
-
-  if (Device.isDevice) {
-    const { status: existingStatus } = await Notifications.getPermissionsAsync();
-    let finalStatus = existingStatus;
-    if (existingStatus !== 'granted') {
-      const { status } = await Notifications.requestPermissionsAsync();
-      finalStatus = status;
-    }
-    if (finalStatus !== 'granted') {
-      alert('Failed to get push token for push notification!');
-      return;
-    }
-    // Learn more about projectId:
-    // https://docs.expo.dev/push-notifications/push-notifications-setup/#configure-projectid
-    token = (await Notifications.getExpoPushTokenAsync({ projectId: '6afda1f7-5c0d-4e15-b294-efbca5a01c6c' })).data;
-    console.log(token);
-  } else {
-    alert('Must use physical device for Push Notifications');
-  }
-
-  return token;
 }
