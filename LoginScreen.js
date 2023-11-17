@@ -13,9 +13,9 @@ const LoginScreen = () => {
             };
 
             const handleLogin = async () => {
-              const success = await signin(email, password);
-              if (success) {
-                console.log('user login');
+              const uid = await signin(email, password);
+              if (uid) {
+                console.log('사용자 UID:', uid);
                 navigation.navigate("Mains")}
               }
         
