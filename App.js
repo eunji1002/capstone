@@ -1,27 +1,27 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import InitialScreen from './Intialscreen'; 
-import Scan from './Scan';
-import LoginScreen from './LoginScreen';
-import RegisterScreen from './RegisterScreen';
-import MainScreen from './MainScreen';
-import SearchScreen from './SearchScreen'
+import InitialScreen from './Screen/Intialscreen'; 
+import Scan from './Screen/Scan';
+import LoginScreen from './Screen/LoginScreen';
+import RegisterScreen from './Screen/RegisterScreen';
+import MainScreen from './Screen/MainScreen';
+import SearchScreen from './Screen/SearchScreen';
+import Productregist from './Screen/Product';
 import Notification from './Notification';
 import { navigationRef } from './NavigationManager'; 
 
 
-import firebase from 'firebase/app'; //없으면 안됌
-import 'firebase/auth';        //없으면 안됌
-import 'firebase/firestore';  //없으면 안됌
-import {firebaseConfig} from './FirebaseConfig'; //없으면 안됌
+import firebase from 'firebase/app';
+import 'firebase/auth';        
+import 'firebase/firestore';  
+import firebaseConfig from './FirebaseConfig'; 
 
 
 
 const Stack = createStackNavigator();
 
 export default function App() {
- 
   return (
     <NavigationContainer ref={navigationRef}>
       <Stack.Navigator initialRouteName="Initial">
@@ -31,6 +31,7 @@ export default function App() {
         <Stack.Screen name="Register" component={RegisterScreen} options={{headerShown: false}}/>
         <Stack.Screen name='Mains' component={MainScreen} options={{headerShown: false}}/>
         <Stack.Screen name='Search' component={SearchScreen} options={{headerShown: false}}/>
+        <Stack.Screen name='Productregist' component={Productregist} options={{headerShown : false}}/>
         <Stack.Screen name='Notification' component={Notification} options={{headerShown: false}}/>
       </Stack.Navigator>
     </NavigationContainer>

@@ -4,7 +4,7 @@ import { StyleSheet, TouchableOpacity, Text, View } from 'react-native';
 export default function RoundButton({ onPress }) {
     return (
       <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.button} onPress={onPress}>
+        <TouchableOpacity style={styles.button} onPress={() => { console.log("Button Pressed"); onPress(); }}>
           <Text style={styles.text}>+</Text>
         </TouchableOpacity>
       </View>

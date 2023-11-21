@@ -23,7 +23,7 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
-const db = getFirestore(app);
+
 
 
 if (!firebase.apps.length) {
@@ -31,7 +31,7 @@ if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
 }
 
-export { db }; 
+
 // Initialize Expo Notifications
 // Notifications.setNotificationHandler({
 //   handleNotification: async () => ({

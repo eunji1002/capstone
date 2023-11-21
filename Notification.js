@@ -2,9 +2,10 @@ import { useState, useEffect, useRef } from 'react';
 import { Text, View, Button, Platform } from 'react-native';
 import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
-import { db } from './FirebaseConfig'; 
-import { doc, onSnapshot, collection } from 'firebase/firestore';
 import dayjs from 'dayjs';
+import { doc, onSnapshot, collection } from 'firebase/firestore';
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/firestore';
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -42,8 +43,10 @@ export default function Notification() {
   }, []);
 
   const listenForUpdates = () => {
-    const userDocRef = collection(db, 'users', 'XCgbxTGZAqO3JkAqw8MoDgRCV8h1', 'food');
-    return onSnapshot( userDocRef, (snapshot) => {
+      const currentUser = firebase.auth().currentUser;
+      const db = firebase.firestore();
+      const userDocRef = collection(db, 'users', 'XCgbxTGZAqO3JkAqw8MoDgRCV8h1', 'food');
+      return onSnapshot( userDocRef, (snapshot) => {
       snapshot.forEach((doc) => {
         const userData = doc.data();
         console.log('UserData:', userData);
