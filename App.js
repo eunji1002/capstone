@@ -8,7 +8,6 @@ import RegisterScreen from './Screen/RegisterScreen';
 import MainScreen from './Screen/MainScreen';
 import SearchScreen from './Screen/SearchScreen';
 import Productregist from './Screen/Product';
-import Notification from './Notification';
 import { navigationRef } from './NavigationManager'; 
 
 
@@ -32,7 +31,6 @@ export default function App() {
         <Stack.Screen name='Mains' component={MainScreen} options={{headerShown: false}}/>
         <Stack.Screen name='Search' component={SearchScreen} options={{headerShown: false}}/>
         <Stack.Screen name='Productregist' component={Productregist} options={{headerShown : false}}/>
-        <Stack.Screen name='Notification' component={Notification} options={{headerShown: false}}/>
       </Stack.Navigator>
     </NavigationContainer>
   );

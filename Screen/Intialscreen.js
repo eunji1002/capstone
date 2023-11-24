@@ -25,12 +25,6 @@ const InitialScreen = () => {
           buttonStyle={[styles.registerButton, { marginTop: 10 }]}
           textStyle={styles.register}
         />
-         <CustomButton
-          title="푸시알림"
-          onPress={() => handleNavigation('Notification')}
-          buttonStyle={[styles.registerButton, { marginTop: 10 }]}
-          textStyle={styles.register}
-        />
       </View>
     </View>
   );

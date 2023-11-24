@@ -1,10 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
-import { Text, View, Button, Platform } from 'react-native';
+import {  Platform } from 'react-native';
 import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
-import dayjs from 'dayjs';
-import { doc, onSnapshot, collection } from 'firebase/firestore';
-import firebase from 'firebase/compat/app';
 import 'firebase/compat/firestore';
 
 Notifications.setNotificationHandler({
