@@ -10,7 +10,6 @@ import SearchScreen from './Screen/SearchScreen';
 import Productregist from './Screen/Product';
 import { navigationRef } from './NavigationManager'; 
 
-
 import firebase from 'firebase/app';
 import 'firebase/auth';        
 import 'firebase/firestore';  

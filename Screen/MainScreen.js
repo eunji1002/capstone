@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
+import { Alert, View, Text, Image, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import RoundButton from '../RoundButton';
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/firestore';
 import dayjs from 'dayjs';
 import { schedulePushNotification } from '../Notification'
+
 
 const MainScreen = () => {
   const navigation = useNavigation();
@@ -27,7 +28,7 @@ const MainScreen = () => {
   const Searchbt = () => {
     navigation.navigate('Search');
   };
-
+  
   const updateSelectedCategory = (newCategory) => {
     setSelectedCategory(newCategory);
     fetchProductDataFromFirestore(newCategory);
@@ -58,6 +59,52 @@ const MainScreen = () => {
     }
   };
 
+  const deleteItem = (docId) => {
+    Alert.alert(
+      '삭제',
+      '정말로 삭제하시겠습니까?',
+      [
+        { text: '취소', onPress: () => { }, style: 'cancel' },
+        {
+          text: '삭제',
+          onPress: async () =>{ 
+            await remove(docId);
+          },
+            style: 'destructive', 
+        },
+      ],
+      {
+        cancelable: true,
+        onDismiss: () => { },
+      },
+    );
+  };
+
+  const remove = async (docId) => {
+    try {
+      const currentUser = firebase.auth().currentUser;
+      const db = firebase.firestore();
+      const selectedCategory = '식품'; // 예시로 기본 카테고리 설정 (필요에 따라 변경)
+  
+      const productsRef = db
+      .collection("users")
+      .doc(currentUser.uid)
+      .collection("product")
+      .doc("cate")
+      .collection(selectedCategory)
+      .doc(docId);
+  
+      await productsRef.delete();
+  
+      console.log('데이터 삭제 완료');
+      setScannedItems((prevItems) => prevItems.filter((item) => item.docId !== docId));
+    } catch (error) {
+      console.error('데이터 삭제 실패:', error);
+    }
+  };
+
+
+
   const  fetchProductDataAndScheduleNotifications = async (category = selectedCategory) => {
     try {
       const currentUser = firebase.auth().currentUser;
@@ -74,11 +121,13 @@ const MainScreen = () => {
       const products = querySnapshot.docs.map(doc => {
       const data = doc.data();
       console.log("UserData:", data);
-        return {
-          prnm: data.prname,
-          data: data.brnum,
-          deadline: data.deadline,
-        };
+      return ({
+        prnm: data.prname,
+        data: data.brnum,
+        deadline: data.deadline,
+        docId: doc.id,
+      });
+
       });
   
       
@@ -110,15 +159,16 @@ const MainScreen = () => {
     <View style={styles.container}>
       <Header onSearchPress={Searchbt} selectedCategory={selectedCategory} onSelectCategory={updateSelectedCategory} />
       <View style={styles.horizontalLine} />
-      <ScannedItemList scannedItems={scannedItems} />
+      <ScannedItemList scannedItems={scannedItems} onDeleteItem = {deleteItem} />
       <RoundButton onPress={() => navigation.navigate('Scanner')} />
     </View>
+
   );
 };
 
-const Header = ({ onSearchPress, selectedCategory, onSelectCategory }) => (
+const Header = ({ onSearchPress, selectedCategory, categories, onSelectCategory }) => (
   <View style={styles.topRow}>
-    <TouchableOpacity onPress={() => onSelectCategory(selectedCategory)}>
+    <TouchableOpacity onPress={() => onSelectCategory(category)}>
       <Text style={styles.logo}>{selectedCategory}</Text>
     </TouchableOpacity>
     <TouchableOpacity onPress={onSearchPress}>
@@ -130,22 +180,26 @@ const Header = ({ onSearchPress, selectedCategory, onSelectCategory }) => (
   </View>
 );
 
-const ScannedItemList = ({ scannedItems }) => (
+
+const ScannedItemList = ({ scannedItems , onDeleteItem }) => (
   <FlatList
     data={scannedItems}
-    keyExtractor={(item, index) => index.toString()}
+    keyExtractor={(item, index) => index.docId}
     renderItem={({ item }) => (
+      <TouchableOpacity onLongPress={() => onDeleteItem(item.docId)}>
       <View style={styles.scannedItem}>
         <View style={styles.itemInfo}>
           <Text style={styles.deadline}>{`${item.deadline}`}</Text>
           <Text style={styles.prnm}>{`${item.prnm}`}</Text>
           <Text>{`${item.data}`}</Text>
         </View>
+
         <Image
           style={styles.itemImage}
           source={require('../assets/post.png')}
         />
       </View>
+      </TouchableOpacity>
     )}
     ItemSeparatorComponent={() => <View style={styles.itemSeparator} />}
     showsVerticalScrollIndicator={false}
