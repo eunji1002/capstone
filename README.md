@@ -15,8 +15,17 @@
 - **바코드 스캐닝**: 제품 바코드를 스캔하여 유통기한 정보를 쉽게 입력하고 관리.
 - **푸시 알림**: 앱이 실행 중일 때 유통기한이 임박한 제품에 대해 사용자에게 푸시 알림을 통해 알림을 제공합니다.
 
-## 향후 계획
+## 앱 미리보기
+<p>
+  <img src="/assets/1.png" width="200" alt="제품등록">
+  <img src="/assets/2.png" width="200" alt="제품등록2">
+  <img src="/assets/3.png" width="200" alt="푸시알림">
+  <img src="/assets/4.png" width="200" alt="제품삭제">
+</p>
 
+
+
+## 향후 계획
 - **FCM 통합**: 앱이 백그라운드에 있거나 사용 중이지 않을 때도 사용자가 푸시 알림을 받을 수 있도록 Firebase Cloud Messaging(FCM)을 도입할 계획입니다.
 
 
